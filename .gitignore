@@ -1,0 +1,50 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Docker related
+.docker/
+docker-compose.override.yml
+
+# Python (if needed)
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+venv/
+ENV/
+env/
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Build and package files
+dist/
+build/
+*.egg-info/
+
+# Temporary files
+tmp/
+temp/
