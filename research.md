@@ -42,6 +42,13 @@
    - Accessed: April 16, 2025, 08:22 AM (CST)
    - Summary: Completely resetting Docker Desktop's cache resolved similar issues for several users. This includes removing all images, containers, and cached build files.
 
+4. **Using the `--load` Flag with BuildKit**
+   - Source: Direct Testing on Linux System
+   - Date: April 16, 2025, 08:38 AM (CST)
+   - Summary: Building with `docker build --load -t debian-dev:stable ./docker/debian_stable` successfully builds and loads the Debian Stable image on Linux. This flag explicitly tells Docker to load the built image into the local Docker daemon after building.
+   - Details: When using BuildKit with the docker-container driver (default in newer Docker versions), the standard `docker build` command keeps the build result only in the build cache. Using `--load` ensures the image is available in the local repository.
+   - Note: While this approach works on Linux systems, it still needs to be verified on macOS with Docker Desktop where the hash mismatch issues were originally observed.
+
 ## How to Submit this Bug to Docker
 
 ### Before Submitting
@@ -112,6 +119,14 @@ When attempting to build Docker images with either Ubuntu 24.04 or Debian Stable
 - Multiple packages fail with hash verification errors
 - The issue affects both Ubuntu 24.04 and Debian Stable
 - Similar errors have been reported in [link to any similar issues you found]
+
+## Attempted Workarounds
+- We successfully built the Debian Stable image on Linux using the `--load` flag with BuildKit:
+  ```bash
+  docker build --load -t debian-dev:stable ./docker/debian_stable
+  ```
+- This workaround addresses the warning about images not being saved but still needs testing on macOS to confirm if it resolves the hash mismatch issues
+- We also attempted [list any other workarounds that were tried]
 
 ## Attachments
 - [Include your Dockerfiles and complete build logs]

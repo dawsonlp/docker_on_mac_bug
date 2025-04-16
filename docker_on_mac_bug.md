@@ -54,3 +54,38 @@ Possible workarounds to investigate:
 2. Implementing package caching strategies
 3. Building with network=host option
 4. Using multi-stage builds with pre-downloaded packages
+
+## Successful Workaround
+After testing on a Linux system (Ubuntu with kernel 6.11), we were able to successfully build the Debian Stable image using the `--load` flag:
+
+```bash
+docker build --load -t debian-dev:stable ./docker/debian_stable
+```
+
+### Explanation
+The warning "No output specified with docker-container driver. Build result will only remain in the build cache..." occurs because Docker is using BuildKit with the docker-container driver by default. When using a standard `docker build` command, BuildKit builds the image in a container environment but doesn't automatically load it into Docker's local image repository.
+
+Using `--load` explicitly tells Docker to load the built image into the local Docker daemon after building, making it available for immediate use without having to push it to a registry.
+
+### Verification
+The Debian Stable image builds successfully and includes all the required packages:
+
+```
+$ docker run -it --rm debian-dev:stable bash -c "cat /etc/os-release && echo && gcc --version"
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+gcc (Debian 12.2.0-14) 12.2.0
+Copyright (C) 2022 Free Software Foundation Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+```
+
+Note: While this successfully builds the Debian Stable image on a Linux system, this may or may not resolve the hash mismatch issues observed on macOS systems with Docker Desktop.
